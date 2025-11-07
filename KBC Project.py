@@ -1,35 +1,103 @@
-questions=[["Where was India’s first national Museum opened?","Delhi","Hyedrabad","Rajasthan","Mumbai","None",4],
+import random
+questions = [
+    ["Where was India’s first national Museum opened?",
+     ["Delhi", "Hyderabad", "Rajasthan", "Mumbai"], 0],
 
-["Which of the three banks will be merged with the other two to create India's tird largest bank? ","Punjab national bank","Indian bank","Bank of baroda","Dena bank","None",2],
+    ["Which of these banks was merged to create India's third largest bank?",
+     ["Punjab National Bank", "Indian Bank", "Bank of Baroda", "Dena Bank"], 2],
 
-["What is the name of the weak zone of the earth’s crust?","Seismic","Cosmic","Formic","Anemic","None",1],
-[" In 2019, Which popular singer was awarded the Bharat Ratna award?","Lata mangeshkar","Asha bhosle","Bhupen hazarika","Manna dey","None",3],
- ["The world’s nation 5G mobile network was launched by which country?","japan","asia","malysia","south korea","none",4],
-["Which language was used in making fb?","Python","Javascript","French","Php","None",4],
-["The world’s nation 5G mobile network was launched by which country?","2015","2017","2019","2020","None",3],
-["Vijay Singh (golf player) is from which country","Fiji","USA","Asia","UK","None",1],
-["The green planet in the solar system is?","Mars","Uranus","Venus","Earth","None",2],
-["What is the reason behind the Bats flying in the dark?","They produce high pitched sounds called ultrasonics","The light startles them","They have a perfect vision in the dark","None of the above","none",1],
-["Which of these is the small-scale industry in India?","Jute industry","Paper industry","Textile industry","Handloom industry","none",4]
-          ]
-levels=[1000,2000,5000,10000,20000,40000,80000,160000,320000,640000,1250000]
-money=0
-for i in range(0,len(questions)):
-  question=questions[i]
-  print(f"\n\nQuestion for Rs.{levels[i]}")
-  print(f"Your question is:\n{question[0]}")
-  print(f"a. {question[1]}                      c. {question[3]}")
-  print(f"b. {question[2]}                      d. {question[4]}")
-  reply=int(input("Enter your Answer 1-4:"))
-  if(reply==question[-1]):
-    print(f"Correct Answer\nYou have won{levels[i]}")
-    if(i==4):
-      money=10000
-    elif(i==9):
-      money=320000
-    elif(i==11):
-      money=1250000
-  else:
-    print("wrong answer")
-    break
-print(f"your price is{money}!!")
+    ["What is the weak zone of the earth’s crust called?",
+     ["Seismic", "Cosmic", "Formic", "Anemic"], 0],
+
+    ["In 2019, which singer received Bharat Ratna?",
+     ["Lata Mangeshkar", "Asha Bhosle", "Bhupen Hazarika", "Manna Dey"], 2],
+
+    ["Which country launched the world’s first 5G network?",
+     ["Japan", "Asia", "Malaysia", "South Korea"], 3],
+
+    ["Which language was initially used to build Facebook?",
+     ["Python", "JavaScript", "French", "PHP"], 3],
+
+    ["In which year was 5G first launched globally?",
+     ["2015", "2017", "2019", "2020"], 2],
+
+    ["Vijay Singh (golf player) is from which country?",
+     ["Fiji", "USA", "Asia", "UK"], 0],
+
+    ["The green planet in the solar system is?",
+     ["Mars", "Uranus", "Venus", "Earth"], 1],
+
+    ["Why can bats fly in the dark?",
+     ["Ultrasonic sound navigation", "Light startles them",
+      "Perfect night vision", "None"], 0],
+
+    ["Which of these is a small-scale industry in India?",
+     ["Jute industry", "Paper industry", "Textile industry", "Handloom industry"], 3]
+]
+
+levels = [1000, 2000, 5000, 10000, 20000,
+          40000, 80000, 160000, 320000, 640000, 1250000]
+
+checkpoints = {4: 10000, 9: 320000, 10: 1250000}
+
+
+random.shuffle(questions)
+
+money = 0
+
+print("\n⭐ WELCOME TO KAUN BANEGA CROREPATI! ⭐")
+print("----------------------------------------")
+
+for i in range(len(questions)):
+    q_text = questions[i][0]
+    options = questions[i][1]
+    correct_index = questions[i][2]
+
+    
+    option_list = list(enumerate(options))
+    random.shuffle(option_list)
+
+   
+    new_correct_index = None
+    for idx, (original_index, option_value) in enumerate(option_list):
+        if original_index == correct_index:
+            new_correct_index = idx + 1   # +1 because user sees 1-4
+            break
+
+    print(f"\n✅ Question for Rs. {levels[i]}")
+    print(q_text)
+
+   
+    for num, (_, option_value) in enumerate(option_list, start=1):
+        print(f"{num}. {option_value}")
+
+    user_input = input("\nEnter your answer (1-4) or 'quit' to exit: ")
+
+    if user_input.lower() == "quit":
+        print("\nYou quit the game!")
+        break
+
+    if not user_input.isdigit():
+        print("❌ Invalid input!")
+        continue
+
+    reply = int(user_input)
+
+    if reply == new_correct_index:
+        print("\n✅ Correct Answer!")
+        money = levels[i]
+
+        if i in checkpoints:
+            money = checkpoints[i]
+            print(f"🎯 Checkpoint reached! Guaranteed Rs. {money}")
+
+    else:
+        print("\n❌ Wrong Answer!")
+        for cp in sorted(checkpoints.keys(), reverse=True):
+            if i > cp:
+                money = checkpoints[cp]
+                break
+        break
+
+print(f"\n💰 Your final winning amount: Rs. {money}")
+print("🎉 Thanks for playing KBC! 🎉")
